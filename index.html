@@ -1,0 +1,130 @@
+<head>
+	<title>SVEA</title>
+	<meta property="og:title" content="SVEA">
+	<meta property="og:description" content="Stabilized Q-Value Estimation under Augmentation - ICLR 2022 Submission">
+	<meta name="twitter:card" content="summary_large_image">
+	<style>
+body {background-color: #fdfdfd; color: rgb(33, 37, 41); margin: 0;}
+h1, h2, h3, h4, h5 {text-align: center;}
+h1 {margin-bottom: 48px; font-size: 2em; }
+h2 {margin-top: 48px;}
+h1, h2, h3, h4, h5, a, p, span, body {font-weight: normal; font-family: sans-serif;}
+.header {background-color: #efeff3; width: 100%; padding-top: 48px; padding-bottom: 8px;}
+.links {width: 100%; margin: auto; text-align: center; padding-top: 8px; padding-bottom: 16px;}
+.content {max-width: 900px; margin: auto; margin-top: 48px;}
+a, h2 {color: #2471a3; text-decoration: none;}
+a:hover {color: #5499c7;}
+.nobreak {white-space: nowrap;}
+.hr {width: 100%; height: 1px; margin: 48px 0; background-color: #d6dbdf;}
+p {line-height: 1.4em; text-align: justify;}
+.abstract {max-width: 664px; margin: auto;}
+.math {font-family: "Computer Modern Sans", sans-serif; font-style: italic;}
+sub, sup {line-height: 0;}
+.figure {width: 100%; min-height: 120px; margin: 36px 0; background-repeat: no-repeat; background-position: center; background-size: contain;}
+.youtube {position: relative;}
+.youtube iframe {margin: auto; display: block; margin-top: 48px;}
+.content-video {width: 100%; margin: 0; text-align: center;}
+.content-video-container {width: 100%; max-width: 900px; margin: auto}
+.legend {display: inline-block; border: 1px solid #eaeaea; padding: 8px; margin-top: 12px; text-align: center;}
+.legend-item {display: inline-block; margin-left: 6px; margin-right: 6px; font-size: 12px;}
+.legend-symbol {font-weight: bold; margin-right: 6px; font-size: 20px;}
+.page {display: inline-block; width: 64px; height: 90px; border: 1px solid #bbb; margin: 2px; background-repeat: no-repeat; background-position: center; background-size: contain;}
+table.authors {width: 100%; max-width: 700px; margin: auto; margin-bottom: 16px; text-align: center;}
+table.authors a {padding: 6px 0; display: inline-block; font-weight: bold; font-size: 1.2em;}
+table.authors .authors-affiliation {display: block;}
+a.btn {display: inline-block; min-width: 70px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Computer Modern Sans", sans-serif; background-color:  #2980b9; color: white; padding: 8px 18px; font-size: 0.9em; font-weight: normal; }
+a.btn:hover {background-color:  #7fb3d5;}
+a.btn-left {border-radius: 6px 0 0 6px;}
+a.btn-right {border-radius: 0 6px 6px 0;}
+.btn-bg-alt {background-color: #5499c7 !important;}
+.btn-bg-alt:hover {background-color: #2471a3 !important;}
+.bibtexsection {padding: 4px 16px; font-family: "Courier", monospace; font-size: 12px; white-space: pre; background-color: #f4f4f4; text-align: left;}
+.noselect {-webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;}
+.bold {font-weight: bold;}
+.italic {font-style: italic;}
+	</style>
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+	</script>
+	<script type="text/javascript" async
+  		src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+	</script>
+</head>
+
+<div class="header">
+	<h1>Stabilizing Deep <span class="italic"></span>Q</span>-Learning with ConvNets and<br/>Vision Transformers under Data Augmentation</h1>
+	<table class="authors">
+		<tbody>
+			<tr>
+				<td>
+					<h4>
+						<a href="#" class="nobreak">Anonymous Authors</a>
+						<span class="authors-affiliation">ICLR 2022 Submission</span>
+					</h4>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div class="content">
+	<div class="figure" style="height: 192px; background-image: url(method.png);"></div>
+	<div class="hr"></div>
+	<div>
+		<h2>Abstract</h2>
+		<p class="abstract">
+			While agents trained by Reinforcement Learning (RL) can solve increasingly challenging tasks directly from visual observations, generalizing learned skills to novel environments remains very challenging. Extensive use of data augmentation is a promising technique for improving generalization in RL, but it is often found to decrease sample efficiency and can even lead to divergence. In this paper, we investigate causes of instability when using data augmentation in common off-policy RL algorithms. We identify two problems, both rooted in high-variance \(Q\)-targets. Based on our findings, we propose a simple yet effective technique for stabilizing this class of algorithms under augmentation. We perform extensive empirical evaluation of image-based RL using both ConvNets and Vision Transformers (ViT) on a family of benchmarks based on DeepMind Control Suite, as well as in robotic manipulation tasks. Our method greatly improves stability and sample efficiency of ConvNets under augmentation, and achieves generalization results competitive with state-of-the-art methods for image-based RL. We further show that our method scales to RL with ViT-based architectures, and that data augmentation may be especially important in this setting.
+		</p>
+	</div>
+	<div class="hr"></div>
+	<div>
+		<h2>Method</h2>
+		<p>
+			We identify two causes of instability in deep \(Q\)-learning under augmentation: (1) non-deterministic \(Q\)-targets; and (2) over-regularization. Our method, <span class="bold">SVEA</span>, optimizes a modified \(Q\)-learning objective \(\mathcal{L}^{\textrm{SVEA}}_{Q}\) that leverages two data streams \(\mathbf{s}_{t},~~\mathbf{s}^{\textrm{aug}}_{t} = \tau(\mathbf{s}_{t}, \nu)\) (unaugmented and augmented observations, respectively) for an augmentation \(\tau\) parameterized by \(\nu \sim \mathcal{V}\). We define the \(\mathcal{L}^{\textrm{SVEA}}_{Q}\) objective as<br/>
+			$$
+				\begin{align}
+					\mathcal{L}^{\textbf{SVEA}}_{Q}(\theta, \psi) & \triangleq \alpha \mathcal{L}_{Q}\left(\mathbf{s}_{t}, q^{\textrm{tgt}}_{t}; \theta, \psi\right) + \beta \mathcal{L}_{Q}\left(\mathbf{s}^{\textrm{aug}}_{t}, q^{\textrm{tgt}}_{t}; \theta,\psi\right) \\
+					& = \mathbb{E}_{\mathbf{s}_{t}, \mathbf{a}_{t}, \mathbf{s}_{t+1} \sim \mathcal{B}} \left[ \alpha \left\| Q_{\theta}(f_{\theta}(\mathbf{s}_{t}), \mathbf{a}_{t}) - q^{\textrm{tgt}}_{t} \right\|^{2}_{2} + \beta \left\| Q_{\theta}(f_\theta(\mathbf{s}^{\textrm{aug}}_{t}), \mathbf{a}_{t}) - q^{\textrm{tgt}}_{t} \right\|^{2}_{2} \right] \,,
+				\end{align}
+			$$
+			where \(q^{\textrm{tgt}}_{t} = r(\mathbf{s}_{t}, \mathbf{a}_{t}) + \gamma \max_{\mathbf{a}'_{t}} Q^{\textrm{tgt}}_{\psi}(f^{^{\textrm{tgt}}}_{\psi}(\mathbf{s}_{t+1}), \mathbf{a}')\) is a \(Q\)-target estimated from <span class="italic">unaugmented</span> data, and \(\alpha,\beta\) are constant coefficients that balance the data streams. We show that for \(\alpha=\beta\), the objective \(\mathcal{L}^{\textrm{SVEA}}_{Q}\) can be evaluated in a single, batched forward pass using a novel <span class="italic">data-mix</span> operation. Lastly, when a policy \(\pi_{\theta}\) is learned, it is optimized strictly from unaugmented data and implicitly learns to generalize through parameter-sharing.
+		</p>
+	</div>
+	<div class="hr"></div>
+	<div>
+		<h2>Reinforcement Learning with Vision Transformers</h2>
+		<p style="text-align: center;">
+			We scale RL to Vision Transformers (ViT), and show that our method greatly improves generalization in this setting.
+		</p>
+		<div class="figure" style="height: 432px; background-image: url(vit.png);"></div>
+	</div>
+	<div class="hr"></div>
+	<div>
+		<h2>Generalization</h2>
+		<p style="text-align: center;">
+			We train policies in a single, fixed environment and evaluate generalization to unseen environments.
+		</p>
+		<div class="content-video" style="margin-bottom: 32px">
+			<div class="content-video-container">
+				<video playsinline="" autoplay="" loop="" preload="" muted="" width="100%">
+					<source src="videos_cartpole.mp4" type="video/mp4"/>
+				</video>
+				<div style="padding: 12px;"></div>
+				<video playsinline="" autoplay="" loop="" preload="" muted="" width="100%">
+					<source src="videos_walker.mp4" type="video/mp4"/>
+				</video>
+				<div style="padding: 12px;"></div>
+				<video playsinline="" autoplay="" loop="" preload="" muted="" width="100%">
+					<source src="videos_robot.mp4" type="video/mp4"/>
+				</video>
+			</div>
+		</div>
+	</div>
+	<div class="hr"></div>
+	<div style="padding-bottom: 64px;">
+		<h2>Stability</h2>
+		<p style="text-align: center;">
+			We evaluate the sample efficiency of our method (<span class="bold">SVEA</span>) under 6 common augmentations and compare to <a href="https://arxiv.org/abs/2004.13649">DrQ</a> (Kostrikov et al.).
+		</p>
+		<div class="figure" style="height: 282px; background-image: url(stability.png);"></div>
+	</div>
+</div>
